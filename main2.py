@@ -4,7 +4,7 @@ import random
 from collections import defaultdict
 import requests
 
-
+ssylka = ''
 from music import music
 from discord.ext import commands
 TOKEN=open('token.txt','r', encoding="utf8").read()
@@ -17,11 +17,6 @@ async def on_ready():
 @bot.command(pass_context=True)
 async def повтор(ctx, *arg):
     await ctx.send(' '.join(arg))
-
-@bot.command(pass_context=True)
-async def song(ctx):
-    page = requests.get("https://genius.com/")
-    await ctx.send(page.text)
 
 # @bot.command(pass_context=True)
 # async def lyrics(ctx, *args):
@@ -41,11 +36,11 @@ async def song(ctx):
 @bot.command()
 async def info(ctx):
     spis='''
-    ss повтор - повторяет ваш текст
-    ss еда - бот выдает свою любимую еду 
-    ss lyrics [Автор], [Название песни] - выводит текст песни
-    ss coin - подбрасывает монетку
-    ss хто_я - объявляет себя'''
+    **ss повтор** - повторяет ваш текст
+    **ss еда** - бот выдает свою любимую еду 
+    **ss text [Автор], [Название песни]** - выводит текст песни
+    **ss coin** - подбрасывает монетку
+    **ss хто_я** - объявляет себя'''
     embed = discord.Embed(color = 0x08a15c, title = 'Список команд',description=spis) # Создание Embed'a
     await ctx.send(embed = embed) # Отправляем Embed
 
@@ -99,10 +94,64 @@ async def text(ctx,*args):
     # await ctx.send(href_)
     # print(requests.get(href_).text)
     sel2='div.content-table > article > div.b-podbor > div:nth-child(2) > div.b-podbor__text > pre'
+    # #body > div.content-table > article > div.b-podbor > div:nth-child(2) > div.b-podbor__text > pre
     soup=BeautifulSoup(requests.get(href_).text,'html.parser')
     b=soup.select_one(sel2)
     get_text = b.get_text(separator='')
-    embed = discord.Embed(color = 0x08a15c, title = name,description=get_text) # Создание Embed'a
+    get_text = "**"+name+"**"+'''
+    '''+get_text
+    embed = discord.Embed(color = 0x08a15c, title = author, description=get_text) # Создание Embed'a
     await ctx.send(embed = embed) # Отправляем Embed
 
+@bot.command(pass_context=True)
+async def лора_список(ctx,*args):
+    spis = '''
+    **Тампль** 
+    **Западный предел** - Толкин
+    **Небьющееся сердце** - 17 век и барокко
+    **College of St-Joanna** - Гарри Поттер
+    **Пепел Монсегюра** - Средневековье
+    **Чай со слоном** - Махабхарата
+    Корень (**-**) - остальное
+    '''
+    embed = discord.Embed(color = 0x08a15c, title = 'Список категорий',description=spis) # Создание Embed'a
+    await ctx.send(embed = embed) # Отправляем Embed
+
+@bot.command(pass_context=True)
+async def лора_категория(ctx, *arg):
+    global ssylka
+    ap='0'
+    arg = ' '.join(arg)
+    if arg == 'Тампль':
+        ap='5'
+    elif arg == 'Западный предел':
+        ap = '644'
+    elif arg == 'Небьющееся сердце':
+        ap = '605'
+    elif arg == 'College of St-Joanna':
+        ap='159'
+    elif arg == 'Пепел Монсегюра':
+        ap='675'
+    elif arg == 'Чай со слоном':
+        ap='723'
+    elif arg == '-':
+        ap='4'
+    else:
+        embed = discord.Embed(color = 0x08a15c, title = 'Ошибка',description="Категория не найдена") # Создание Embed'a
+        await ctx.send(embed = embed) # Отправляем Embed
+    ssylka += 'http://www.treismorgess.ru/?p='+ap
+    response=requests.get(ssylka)
+    soup=BeautifulSoup(response.text,'html.parser')
+    sel='tr:nth-child(2) > td > div.content > ul'
+    b=soup.select_one(sel)
+    get_text = b.get_text(separator='\n')
+    embed = discord.Embed(color = 0x08a15c, title = arg, description=get_text) # Создание Embed'a
+    await ctx.send(embed = embed) # Отправляем Embed
+
+@bot.command()
+async def вывод_ссылки(ctx):
+    global ssylka
+    if ssylka == '':
+            ssylka = 'https://lotr.fandom.com/ru/wiki/%D0%97%D0%B0%D0%B3%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0'
+    await ctx.send(ssylka)
 bot.run(TOKEN)
