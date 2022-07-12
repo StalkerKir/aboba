@@ -139,7 +139,7 @@ async def лора_категория(ctx, *arg):
     else:
         embed = discord.Embed(color = 0x08a15c, title = 'Ошибка',description="Категория не найдена") # Создание Embed'a
         await ctx.send(embed = embed) # Отправляем Embed
-    ssylka += 'http://www.treismorgess.ru/?p='+ap
+    ssylka = 'http://www.treismorgess.ru/?p='+ap
     response=requests.get(ssylka)
     soup=BeautifulSoup(response.text,'html.parser')
     sel='tr:nth-child(2) > td > div.content > ul'
@@ -147,11 +147,66 @@ async def лора_категория(ctx, *arg):
     get_text = b.get_text(separator='\n')
     embed = discord.Embed(color = 0x08a15c, title = arg, description=get_text) # Создание Embed'a
     await ctx.send(embed = embed) # Отправляем Embed
-
+    ap='0'
 @bot.command()
 async def вывод_ссылки(ctx):
     global ssylka
     if ssylka == '':
             ssylka = 'https://lotr.fandom.com/ru/wiki/%D0%97%D0%B0%D0%B3%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0'
     await ctx.send(ssylka)
+
+@bot.command()
+async def лора_песня(ctx, *arg):
+    global ssylka
+    arg = ' '.join(arg)
+    response=requests.get(ssylka)
+    soup=BeautifulSoup(response.text,'html.parser')
+    sel = 'tr:nth-child(2) > td > div.content > ul'
+    select = soup.select(sel)
+    s = soup.select("a[href^='?p=']")
+    c=None
+    href_ = None
+    for i in range(0,len(s)):
+        #if (s[i] == '?') and (s[i+1] == 'p') and (s[i+2] == '=') .startsWith("?p="):
+        if s[i].text==arg:
+            c = s[i].attrs['href']
+            href_ = 'http://www.treismorgess.ru/?p='+c[3:]
+            break
+    # href_ = None
+    # print(href_)
+    if href_ is None:
+        embed = discord.Embed(color = 0x08a15c, title = 'Ошибка',description="Песня не найдена") # Создание Embed'a
+        await ctx.send(embed = embed) # Отправляем Embed
+        return
+    sel2 = 'tr:nth-child(2) > td > div.content > div'
+    soup=BeautifulSoup(requests.get(href_).text,'html.parser')
+    b=soup.select_one(sel2)
+    print(b)
+    lines = b.select("p")
+    res = ""
+    for i in lines:
+        if i.select('span') or i.select('u'):
+            res1=""
+            for j in i.select("span"):
+                res1+=j.get_text()+'\n'
+                # res+=i.get_text()+"\n"
+            res+=res1
+        else:
+            res+=i.get_text(separator='\n')
+    get_text = res
+    embed = discord.Embed(color = 0x08a15c, title = arg, description=get_text) # Создание Embed'a
+    await ctx.send(embed = embed) # Отправляем Embed
+
+@bot.command()
+async def wiki_year(ctx, arg):
+    url = arg
+    url = 'https://ru.wikipedia.org/wiki/' + arg+'_год'
+    response=requests.get(url)
+    soup=BeautifulSoup(response.text,'html.parser')
+    sel = '#mw-content-text > div.mw-parser-output > ul:nth-child(8)'
+    b=soup.select_one(sel)
+    get_text = b.get_text(separator='\n')
+    embed = discord.Embed(color = 0x08a15c, title = arg, description=get_text) # Создание Embed'a
+    await ctx.send(embed = embed) # Отправляем Embed
 bot.run(TOKEN)
+
