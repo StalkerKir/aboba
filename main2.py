@@ -197,16 +197,95 @@ async def лора_песня(ctx, *arg):
     embed = discord.Embed(color = 0x08a15c, title = arg, description=get_text) # Создание Embed'a
     await ctx.send(embed = embed) # Отправляем Embed
 
+# @bot.command()
+# async def wiki(ctx, arg):
+#     # url = 'https://ru.wikipedia.org/wiki/' + arg
+#     url = 'https://ru.wikipedia.org/w/index.php?search='+arg+'&title=Служебная:Поиск&profile=advanced&fulltext=1&ns0=1'
+#     response=requests.get(url)
+#     soup=BeautifulSoup(response.text,'html.parser')
+#     sel = '#mw-content-text > div.searchresults.mw-searchresults-has-iw > ul > li:nth-child(1) > div.mw-search-result-heading'
+#     select = soup.select_one(sel)
+#     a = select.select_one(sel)
+#     # print(a.attrs)
+#     href_ = "https:" + a.attrs["href"]
+#     sel2 = '#mw-content-text > div.mw-parser-output'
+#     soup=BeautifulSoup(requests.get(href_).text,'html.parser')
+#     b=soup.select_one(sel2)
+#     for c in b.children:
+#         if str(c).startswith('<p>'):
 @bot.command()
-async def wiki_year(ctx, arg):
-    url = arg
-    url = 'https://ru.wikipedia.org/wiki/' + arg+'_год'
-    response=requests.get(url)
-    soup=BeautifulSoup(response.text,'html.parser')
-    sel = '#mw-content-text > div.mw-parser-output > ul:nth-child(8)'
-    b=soup.select_one(sel)
-    get_text = b.get_text(separator='\n')
-    embed = discord.Embed(color = 0x08a15c, title = arg, description=get_text) # Создание Embed'a
+async def Арагорн_сын_Араторна(ctx):
+    spis = '''
+    Арагорн II сын Араторна II
+    Араторн II сын Арадора
+    Арадор сын Аргонуи
+    Аргонуи сын Араторна I
+    Араторн I сын Арассуила
+    Арассуил сын Арахада II
+    Арахад II сын Араворна
+    Араворн сын Арагоста
+    Арагост сын Арахада I
+    Аразад I сын Арагласа
+    Араглас сын Арагорна I 
+    Арагорн I сын Аравира
+    Аравир сын Арануира
+    Арануир сын Арахэля
+    Арахаэль сын Аранарта
+    Аранарт сын Арведуи
+    Арведуи сын Арафанта
+    Арафант сын Аравал
+    Аравал сын Арвелега II
+    Арвелег II сын Арвегила
+    Арвегил сын Аргелеба II
+    Аргелеб II сын Арафора
+    Арафор сын Арвелега I
+    Арвелег I сын Аргелеба I
+    Аргелеб I сын Малвегила
+    Малвегил сын Келебриндора
+    Келебриндор сын Келефарна
+    Келефарн сын Маллор
+    Маллор сын Белега
+    Белег сын Амлайта
+    Амлайт сын Эарендура
+    Эарендур сын Элендура
+    Элендур сын Валандура
+    Валадур сын Тарондора
+    Тарондор сын Таркила
+    Таркил сын Арантара
+    Арантар сын Эльдакара
+    Эльдакар сын Валандил
+    Валандил сын Исилдура
+    Исилдур сын Элендила
+    Элендил сын Амандиля
+    Амандиль сын Нумендиля
+    Нумендиль сын ???
+    ??? сын Эарендура
+    *пробел в летописи*
+    Валандиль сын Сильмариэн
+    Сильмариэн дочь Тар-Элендиля
+    Тар-Элендиль сын Тар-Амандиля
+    Тар-Амандиль сын Вардамира Нолимона
+    Вардамир Нолимон сын Элроса Тар-Миньятура
+    Элрос Тар-Миньятур сын Эарендиля Морехода
+    Эарендиль Мореход сын Туора Эладара
+    Туор Эладар сын Хуора
+    Хуор сын Галдора
+    Галдор сын Хадора Златовласого
+    Хадор Златовласый сын Хатола
+    Хатол сын Магора
+    Магор сын Малаха
+    Малах сын Мараха
+    *Конец известной хронологии*
+    '''
+    embed = discord.Embed(color = 0x08a15c, title = 'Родословная Арагорна по мужской линии', description=spis) # Создание Embed'a
     await ctx.send(embed = embed) # Отправляем Embed
+    # get_text = b.get_text(separator='')
+    # print(response.text)
+    # sel = '#mw-content-text > div.mw-parser-output ul'
+    # b=soup.select(sel)
+    # get_text = b.get_text(separator='\n')
+    # print(get_text)
+    # embed = discord.Embed(color = 0x08a15c, title = arg, description=get_text) # Создание Embed'a
+    # await ctx.send(embed = embed) # Отправляем Embed
 bot.run(TOKEN)
 
