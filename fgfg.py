@@ -29,8 +29,7 @@ def reg():
             print(value)
 
 def delete_db():
-    sql.execute(f"DELETE FROM users WHERE login = '{user_login}:'")
-    sql.execute(f"DELETE FROM users WHERE password = '{user_password}:'")
+    sql.execute("DELETE FROM users WHERE login = '{user_login}:'")
     db.commit()
 
     print('Запись удалена!')

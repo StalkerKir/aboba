@@ -3,16 +3,44 @@ from bs4 import BeautifulSoup, Tag
 import random
 from collections import defaultdict
 import requests
+import datetime
+import logging
+logger = logging.getLogger('logger')
+from discord.ext import commands
+from discord_components import DiscordComponents, Button, ButtonStyle
 
 ssylka = ''
 from music import music
-from discord.ext import commands
 TOKEN=open('token.txt','r', encoding="utf8").read()
-bot = commands.Bot(command_prefix='ss ')
+bot = commands.Bot(command_prefix='en ')
 
 @bot.event
 async def on_ready():
+    DiscordComponents(bot)
     print('We have logged in as {0.user}'.format(bot))
+
+@bot.command()
+async def голосование(ctx):
+    await ctx.send(
+        embed = discord.Embed(title = 'Invite to party'),
+        components=[
+            Button(style=ButtonStyle.green, label='Accept', emoji="✨"),
+            Button(style=ButtonStyle.red, label = 'Go to the dick', emoji="👨🏿")
+        ]
+    )
+
+    response = await bot.wait_for("button_click")
+    if response.channel == ctx.channel:
+        if response.component.label == 'Accept':
+            await response.respond(content='Great! 😎')
+        else:
+            await response.respond(
+                embed=discord.Embed(title='Are you sure?'),
+                components=[
+                    Button(style=ButtonStyle.green, label='YES'),
+                    Button(style=ButtonStyle.red, label='NO'),
+                ]
+            )
 
 @bot.command(pass_context=True)
 async def повтор(ctx, *arg):
@@ -36,11 +64,16 @@ async def повтор(ctx, *arg):
 @bot.command()
 async def info(ctx):
     spis='''
-    **ss повтор** - повторяет ваш текст
-    **ss еда** - бот выдает свою любимую еду 
-    **ss text [Автор], [Название песни]** - выводит текст песни
-    **ss coin** - подбрасывает монетку
-    **ss хто_я** - объявляет себя'''
+    **en повтор** - повторяет ваш текст
+    **en еда** - бот выдает свою любимую еду 
+    **en text [Автор], [Название песни]** - выводит текст песни
+    **en coin** - подбрасывает монетку
+    **en кто_я** - объявляет себя
+    **en голосование** - позволяет создавать голосование по каким-то вопросам
+    **Блок команд, связанных с сайтом Лоры Провансаль:**
+    **en лора_список** - выдает список всех альбомов Лоры
+    **en лора_категория [Название альбома]** - выдает список песен в искомом альбоме
+    **en лора_песня [Название песни, находящейся в выбранном ранее альбоме]** - выдает текст песни (не всегда полностью)'''
     embed = discord.Embed(color = 0x08a15c, title = 'Список команд',description=spis) # Создание Embed'a
     await ctx.send(embed = embed) # Отправляем Embed
 
@@ -52,7 +85,7 @@ async def еда(ctx):
 
 @bot.command()
 async def хто_я(ctx):
-    await ctx.send("Я Обэмэ нафиг")
+    await ctx.send("Я бот, созданный для парсинга сайтов и удобного пребывания в дискорде")
 
 @bot.command()
 async def coin(ctx):
@@ -85,7 +118,7 @@ async def text(ctx,*args):
             sel2 = "a:nth-child(2)"
             a = select[i].select_one(sel2)
             # print(a.attrs)
-            href_ = "https:" + a.attrs["href"]
+            href_ = a.attrs["href"]
             break
     if href_ is None:
         embed = discord.Embed(color = 0x08a15c, title = 'Ошибка',description="Песня не найдена") # Создание Embed'a
@@ -287,5 +320,46 @@ async def Арагорн_сын_Араторна(ctx):
     # print(get_text)
     # embed = discord.Embed(color = 0x08a15c, title = arg, description=get_text) # Создание Embed'a
     # await ctx.send(embed = embed) # Отправляем Embed
+
+# @bot.command()
+# async def kick(ctx, user : discord.User(), *arg, reason='Причина не указана'):
+#     await bot.kick(user)
+#     await ctx.send('Пользователь {user.name} был изгнан по причине "{reason}"')
+
+# @bot.command()
+# async def check_account_age(self, author: discord.Member) -> bool:
+#         account_age = self.config.get("account_age")
+#         now = datetime.utcno w()
+#
+#         try:
+#             min_account_age = author.created_at + account_age
+#         except ValueError:
+#             logger.warning("Error with 'account_age'.", exc_info=True)
+#             min_account_age = author.created_at + self.config.remove("account_age")
+#
+#         if min_account_age > now:
+#             # User account has not reached the required time
+#             delta = human_timedelta(min_account_age)
+#             logger.debug("Blocked due to account age, user %s.", author.name)
+#
+#             if str(author.id) not in self.blocked_users:
+#                 new_reason = f"System Message: New Account. Required to wait for {delta}."
+#                 self.blocked_users[str(author.id)] = new_reason
+#
+#             return False
+#         return True
+
+# class Tutorial(commands.Cog):
+#     def _init_(self, bot):
+#         self.bot = bot
+#
+#         @commands.Cog.listener()
+#         async def on_member_join(self, member):
+#             channel = member.guild.system_channel
+#             await channel.send(embed = discord.Embed(description=f'{member.mention} Добро пожаловать на сервер!'))
+#
+# def setup(bot):
+#     bot.add_cog(Tutorial(bot))
 bot.run(TOKEN)
+
 
