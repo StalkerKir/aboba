@@ -1,16 +1,16 @@
 import discord
+from PIL.Image import Resampling
 from bs4 import BeautifulSoup, Tag
 import random
-from collections import defaultdict
 import requests
-import datetime
+import io
+from PIL import Image, ImageFont, ImageDraw
 import logging
 logger = logging.getLogger('logger')
 from discord.ext import commands
 from discord_components import DiscordComponents, Button, ButtonStyle
 
 ssylka = ''
-from music import music
 TOKEN=open('token.txt','r', encoding="utf8").read()
 bot = commands.Bot(command_prefix='en ')
 
@@ -20,7 +20,35 @@ async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
 
 @bot.command()
-async def голосование(ctx):
+async def card(ctx, member: discord.Member):
+    await ctx.channel.purge(limit = 1)
+    img = Image.new("RGBA", (450, 120), 0x08a15c)
+    url = str(member.avatar_url)[:-10]
+    response = requests.get(url, stream = True)
+    response = Image.open(io.BytesIO(response.content))
+    response = response.convert('RGBA')
+    response = response.resize((100,100), Resampling.LANCZOS)
+    img.paste(response, (5, 15, 105, 115))
+    idraw = ImageDraw.Draw(img)
+    name = member.name
+    tag = member.discriminator
+    stata = member.status
+    print(member)
+    headline = ImageFont.truetype('arial.ttf', size = 20)
+    undertext = ImageFont.truetype('arial.ttf', size = 20)
+    idraw.text((145, 15), f'{name}#{tag}', font = headline)
+    idraw.text((145, 50), f'ID: {member.id}', font = undertext)
+    idraw.text((145, 90), f'{stata}', font = undertext)
+    img.save('card.png')
+    await ctx.send(file = discord.File(fp = 'card.png'))
+
+
+@bot.command()
+async def голосование(ctx, *args):
+    name, k = ' '.join(args).split(', ')
+    k = int(k)
+    for i in k:
+        a
     await ctx.send(
         embed = discord.Embed(title = 'Invite to party'),
         components=[
