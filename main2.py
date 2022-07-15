@@ -20,6 +20,10 @@ async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
 
 @bot.command()
+async def армяне(ctx, *arg):
+    await ctx.send(' '.join(arg)+', а там армяне в нарды играют')
+
+@bot.command()
 async def card(ctx, member: discord.Member):
     await ctx.channel.purge(limit = 1)
     img = Image.new("RGBA", (450, 120), 0x08a15c)
@@ -94,9 +98,10 @@ async def info(ctx):
     spis='''
     **en повтор** - повторяет ваш текст
     **en еда** - бот выдает свою любимую еду 
-    **en text [Автор], [Название песни]** - выводит текст песни
+    **en text [Автор]; [Название песни]** - выводит текст песни
     **en coin** - подбрасывает монетку
     **en кто_я** - объявляет себя
+    **en армяне** - улучшает любой анекдот в сотню раз
     **en голосование** - позволяет создавать голосование по каким-то вопросам
     **Блок команд, связанных с сайтом Лоры Провансаль:**
     **en лора_список** - выдает список всех альбомов Лоры
@@ -126,7 +131,7 @@ async def coin(ctx):
 
 @bot.command(pass_context=True)
 async def text(ctx,*args):
-    author, name = ' '.join(args).split(', ')
+    author, name = ' '.join(args).split('; ')
     url='https://amdm.ru/search/?q='+author+' '+name
 
     # print(url)
